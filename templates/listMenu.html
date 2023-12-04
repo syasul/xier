@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+<nav class="navbar shadow navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Xier</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="">Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="">pesanan</a>
+          </li>
+        </ul>
+        {% if user.is_authenticated %}
+        <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Logout</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  <div class="p-5 row">
+    <div class="row row-cols-1 row col-8">
+     
+      {% for i in menu_list %}
+        <div class="col-6 col-md-2">
+          <div class="card" style="width: 18rem;">
+              <img src="{{i.image.url}}" style="height: 13rem;" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">{{i.name}}</h5>
+                <p class="card-text">Rp. {{i.price}}</p>
+                {% if i.stok == "Tersedia" %}
+                <a class="btn btn-primary col-12 text-white shadow-none"
+                href="">Beli</a>
+        {% else %}
+                <a class="btn btn-primary col-12 text-white shadow-none disabled"
+                href="">Beli</a>
+            {% endif  %}
+              </div>
+            </div>               
+          </div>
+      
+          {% if forloop.counter|divisibleby:6 and not forloop.last %}
+        </div>
+        <div class="row">
+        {% endif %}
+
+      {% endfor %}
+        </div>
+     
+    <div class="col-2">Pesanan</div>
+  </div>
+ 
+</div>
+  
+{% endblock content %}

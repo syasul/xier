@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+<nav class="navbar shadow navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Xier</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="">Manage Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="">List Pesanan</a>
+          </li>
+        </ul>
+        {% if user.is_authenticated %}
+        <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Logout</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  {% if messages %}
+            {% for msg in messages %}
+            <div class="alert alert-{{msg.tags}}" role="alert">{{msg}}</div>
+            {% endfor %}
+{% endif %}
+<div class="d-grid gap-2">
+  <button type="button" class="btn btn-primary mt-3 mb-3" data-bs-toggle="modal" data-bs-target="#exampleModalMenuBaru">
+  Tambah menu baru
+</button>
+</div>
+<div class="card shadow">
+  <div class="card-body">
+
+    <table class="table">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col" class="text-center">Image</th>
+      <th scope="col" class="text-center">Name</th>
+      <th scope="col" class="text-center">Deskripsi</th>
+      <th scope="col" class="text-center">Stok</th>
+      <th scope="col" class="text-center">Price</th>
+      <th scope="col" class="text-center">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for m in menu %}
+    <tr>
+      <td  class="text-center"><img src="{{m.image.url}}" width="125rem" height="125rem"></td>
+      <td  class="text-center">{{m.name}}</td>
+      <td  class="text-center">{{m.desc}}</td>
+      <td  class="text-center">{{m.stok}}</td>
+      <td  class="text-center">RP. {{m.price}}</td>
+      <td  class="text-center">
+          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate-{{m.id}}">Update</button>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete-{{m.id}}">Delete</button>
+      </td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+
+
+
+<!-- Modal menu baru -->
+<div class="modal fade" id="exampleModalMenuBaru" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Menu baru</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form method="POST" action="{% url 'kantin:tambah-menu' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3 row">
+                <label for="inputname" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                        <input type="name" class="form-control" id="inputname" name="name">
+                    </div>
+            </div>          
+            <div class="mb-3 row">
+                <label for="inputprice" class="col-sm-2 col-form-label">Price</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputprice" name="price">
+                </div>
+            </div>
+          
+          <div class="mb-3 mr-1 ml-1">
+            <label for="inputname" class="col-sm-2 col-form-label">Deskripsi</label>
+            <textarea class="form-control" rows="3" placeholder="Desc" name="desc"></textarea>
+          </div>
+
+
+          <div class="mb-3 row">
+            <label for="inputimage" class="col-sm-2 col-form-label">Stok</label>
+            <div class="col-sm-10">
+                <select class="form-select" id="inputimage" aria-label="Default select example" name="stok">
+                    <option value="Tersedia">Tersedia</option>
+                    <option value="Tidak_Tersedia">Tidak Tersedia</option>
+                </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="inputimage" class="col-sm-2 col-form-label">Image</label>
+            <div class="col-sm-10">
+              <input type="file" class="form-control" id="inputimage" name="image">
+            </div>
+          </div>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-primary" type="submit">Tambah</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal pegawai update -->
+{% for u in menu %}
+<div class="modal fade" id="exampleModalUpdate-{{u.id}}" tabindex="-1" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form method="POST" action="{% url 'kantin:update-menu' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3 row">
+                <label for="inputname" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                        <input type="name" class="form-control" id="inputname" name="name" value="{{u.name}}">
+                    </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="inputprice" class="col-sm-2 col-form-label">Price</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputprice" name="price" value="{{u.price}}">
+                </div>
+            </div>
+            <div class="mb-3">
+              <label class="col-sm-2 col-form-label">Desc</label>
+              <div class="col-sm-10">
+                <input type="text-area" class="form-control" id="inputprice" name="desc" value="{{u.desc}}">
+              </div>
+             
+            </div>
+            <div class="mb-3 row">
+              
+              <div class="mb-3 row mt-4">
+                <label for="inputimage" class="col-sm-2 col-form-label">Stok</label>
+                <div class="col-sm-10">
+                    <select class="form-select" id="inputimage" aria-label="Default select example" name="stok">
+                        <option value="Tersedia">Tersedia</option>
+                        <option value="Tidak Tersedia">Tidak Tersedia</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="inputimage" class="col-sm-2 col-form-label">Image</label>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control" id="inputimage" name="image">
+                </div>
+            </div>
+            <input type="hidden" name="id" value="{{u.id}}">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-primary" type="submit">Update</button>
+            </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endfor %}
+
+
+<!-- Modal pegawai delete -->
+{% for d in menu %}
+<div class="modal fade" id="exampleModalDelete-{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <h5>Yakin yakin menghapus menu '{{d.name}}'?</h5>
+        <form method="POST" action="{% url 'kantin:delete-menu' %}">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{d.id}}">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endfor %}
+{% endblock content %}

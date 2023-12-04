@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+<nav class="navbar shadow navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Xier</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'user:manageuser' %}">Manage User</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'logaktifitas:logaktifitas' %}">Log Aktifitas</a>
+          </li>
+        </ul>
+        
+        <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Logout</a>
+
+      </div>
+    </div>
+  </nav>
+  {% if messages %}
+            {% for msg in messages %}
+            <div class="alert alert-{{msg.tags}}" role="alert">{{msg}}</div>
+            {% endfor %}
+{% endif %}
+
+
+  <div class="card-body">
+
+    <table class="table">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col" class = "text-center">User</th>
+      <th scope="col" class = "text-center">Actifity</th>
+      <th scope="col" class = "text-center">Date</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+      {% for i in log %}
+    <tr>
+      
+        <td class = "text-center">{{i.pegawai}}</td>
+        <td>{{i.activity}}</td>
+        <td class = "text-center">{{i.date|date:"Y m d H:m:s"}}</td>
+      
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+  
+{% endblock content %}
