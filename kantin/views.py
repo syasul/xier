@@ -4,8 +4,9 @@ from django.contrib import messages
 from datetime import datetime
 # import pytz
 # from logaktifitas.models import Logaktifitas
-from .models import Menu
+from kantin.models import Menu
 from user.models import User
+from pesanan.models import Keranjang
 from django.contrib.sessions.models import Session
 
 date_now = datetime.now()
@@ -114,4 +115,30 @@ def deleteMenu(request):
 def list_menu(request, id):
     kantin = get_object_or_404(User, pk=id)
     menus = Menu.objects.filter(author = kantin)
+    
     return render(request, "listMenu.html", {'menu_list' : menus})
+
+def add_to_cart(request, id):
+    menu = get_object_or_404(Menu, pk=id)
+    pembeli = request.user
+    penjual = menu.author
+    
+    
+    if request.user.role == 'Mahasiswa':
+            keranjang, created = Keranjang.objects.get_or_create(
+            menu=menu,
+            pembeli=pembeli,
+            penjual=penjual,  
+            jumlah=request.POST.get('jumlah_pesan', 1)# Ganti dengan atribut penjual yang sesuai
+        )
+            
+    keranjang_list = Keranjang.objects.filter(role="Mahasiswa")
+
+    context = {
+        'keranjang_list': keranjang_list,
+    }
+
+
+    # Redirect ke halaman sebelumnya
+    return redirect('kantin:addToCart', context)
+

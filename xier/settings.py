@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'kantin',
     'logaktifitas',
     'user',
-    'pesanan',
+    'pesanan'
 ]
 
 MIDDLEWARE = [
