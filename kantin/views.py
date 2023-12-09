@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from datetime import datetime
@@ -8,6 +8,9 @@ from kantin.models import Menu
 from user.models import User
 from pesanan.models import Keranjang
 from django.contrib.sessions.models import Session
+from django.urls import reverse
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 date_now = datetime.now()
 
@@ -20,9 +23,8 @@ def manageMenu(request):
         'menu': Menu.objects.filter(author_id=request.user)
     }
     return render(request, 'manageMenu.html', context)
-    
-    
 
+@login_required
 def tambahMenu(request):
     if request.user.role != "Kantin":
         return HttpResponse("Anda Bukan User Kantin")
@@ -56,6 +58,7 @@ def tambahMenu(request):
 
     return redirect('kantin:managemenu')
 
+@login_required
 def updateMenu(request):
     if request.user.role != "Kantin":
         return HttpResponse("Anda Bukan User Kantin")
@@ -96,6 +99,7 @@ def updateMenu(request):
 
     return redirect('kantin:managemenu')
 
+@login_required
 def deleteMenu(request):
     if request.user.role != "Kantin":
         return HttpResponse("Anda Bukan User Kantin")
@@ -111,17 +115,17 @@ def deleteMenu(request):
             messages.error(request, 'Failed delete menu')
 
     return redirect('kantin:managemenu')
-    
-def list_menu(request, id):
-    kantin = get_object_or_404(User, pk=id)
+
+@login_required
+def list_menu(request, kantin_id):
+    kantin = get_object_or_404(User, pk=kantin_id)
     menus = Menu.objects.filter(author = kantin)
     
-    keranjang = Keranjang.objects.filter(pembeli=request.user)
-    
-    return render(request, "listMenu.html", {'menu_list' : menus, 'keranjang_list': keranjang})
+    return render(request, "listMenu.html", {'menu_list' : menus})
 
-def add_to_cart(request, menu_id):
-    menu = get_object_or_404(pk=menu_id)
+@login_required
+def cart(request, kantin_id):
+    menu = get_object_or_404(Menu, pk=kantin_id)
     pembeli = request.user
     penjual = menu.author
     
@@ -129,10 +133,11 @@ def add_to_cart(request, menu_id):
     keranjang_item, created = Keranjang.objects.get_or_create(pembeli=pembeli, penjual=penjual, menu=menu)
 
     if not created:
-        keranjang_item.quantity += 1
+        keranjang_item.jumlah_pesanan += 1
         keranjang_item.save()
 
 
     # Redirect ke halaman sebelumnya
-    return redirect('kantin:listmenu')
+    return HttpResponseRedirect(reverse('kantin:listmenu', kwargs={'kantin_id': kantin_id}))
+
 

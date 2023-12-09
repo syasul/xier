@@ -4,7 +4,7 @@
 
 {% endblock head %}
 {% block content %}
-<nav class="navbar shadow navbar-expand-lg navbar-light bg-light">
+<nav class="navbar shadow navbar-expand-lg navbar-light bg-light shadow-none">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Xier</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +31,7 @@
       
       {% for i in kantin %}
         <div class="col-md-4">
-          <a href="{% url 'kantin:listmenu' i.id %}" class="card-link" style="text-decoration: none;">
+          <a href="{% url 'kantin:listmenu' kantin_id=i.id %}" class="card-link" style="text-decoration: none;">
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">Kantin - {{i.username}}</h5>
