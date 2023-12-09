@@ -37,7 +37,7 @@
           <h5 class="card-title">{{i.name}}</h5>
           <p class="card-text">Rp. {{i.price}}</p>
           {% if i.stok == "Tersedia" %}
-          <form method="post" action="{% url 'kantin:cart' kantin_id=i.id %}">
+          <form method="post" action="{% url 'kantin:cart' menu_id=i.id kantin_id=kantin_id %}">
             {% csrf_token %}
             <button class="btn btn-primary col-12 text-white shadow-none" type="submit" >Add to Cart</button>
           </form>

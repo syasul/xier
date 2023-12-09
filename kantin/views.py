@@ -121,11 +121,11 @@ def list_menu(request, kantin_id):
     kantin = get_object_or_404(User, pk=kantin_id)
     menus = Menu.objects.filter(author = kantin)
     
-    return render(request, "listMenu.html", {'menu_list' : menus})
+    return render(request, "listMenu.html", {'menu_list' : menus, 'kantin_id': kantin_id})
 
 @login_required
-def cart(request, kantin_id):
-    menu = get_object_or_404(Menu, pk=kantin_id)
+def cart(request, menu_id, kantin_id):
+    menu = get_object_or_404(Menu, pk=menu_id)
     pembeli = request.user
     penjual = menu.author
     
@@ -138,6 +138,6 @@ def cart(request, kantin_id):
 
 
     # Redirect ke halaman sebelumnya
-    return HttpResponseRedirect(reverse('kantin:listmenu', kwargs={'kantin_id': kantin_id}))
+    return HttpResponseRedirect(reverse('kantin:listmenu', kwargs={'kantin_id': kantin_id, 'penjual': penjual}))
 
 

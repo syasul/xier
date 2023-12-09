@@ -8,5 +8,5 @@ urlpatterns = [
     path('update-menu/', views.updateMenu, name="update-menu"),
     path('delete-menu/', views.deleteMenu, name="delete-menu"),
     path('list_menu/<int:kantin_id>', views.list_menu, name="listmenu"),
-    path('cart/<int:kantin_id>', views.cart, name="cart")
+    path('cart/<int:kantin_id>/<int:menu_id>/', views.cart, name="cart")
 ]
