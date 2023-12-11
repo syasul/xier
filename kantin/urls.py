@@ -10,5 +10,6 @@ urlpatterns = [
     path('list_menu/<int:kantin_id>', views.list_menu, name="listmenu"),
     path('add_to_cart/<int:kantin_id>/<int:menu_id>/', views.add_to_cart, name="add_to_cart"),
     path('cart/<int:kantin_id>/<int:pembeli_id>', views.cart, name="cart"),
+    path('delete-menu/<int:menu_id>', views.hapusMenuCart, name="hapusMenuCart")
 
 ]

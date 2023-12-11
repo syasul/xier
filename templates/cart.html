@@ -4,29 +4,84 @@
 
 {% endblock head %}
 {% block content %}
-<nav class="navbar shadow navbar-expand-lg navbar-light bg-light">
+<nav class="navbar shadow navbar-expand-lg navbar-light bg-light shadow-none">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Xier</a>
+    <a class="navbar-brand fw-bold" href="#">Xier</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="">Menu</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="">pesanan</a>
+          <a class="nav-link active" aria-current="page" href="">Pesanan</a>
         </li>
       </ul>
       {% if user.is_authenticated %}
-      <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Logout</a>
+      <a class="btn btn-danger" href="{% url 'logout' %}" role="button"><i
+          class="fa-solid fa-right-from-bracket"></i></a>
       {% endif %}
     </div>
   </div>
 </nav>
-<div class="p-5 row">
+<div class="p-5">
+  <div class="row row-cols-1 ">
+    <div class="row mb-4">
+      <div class="col-md-8 d-flex flex-row bd-highlight align-items-center">
+        <div class="shape-rectangle bd-highlight"
+          style="width: 13px; height:28px; background-color: #000; border-radius: 3px"></div>
+        <div class="text bd-highlight" style="font-size: 15px; font-weight:600; margin-left: 5px;">Keranjang Anda</div>
+      </div>
+      <div class="col-md-4 d-flex flex-row justify-content-end align-items-center p-0"> </div>
+    </div>
+    {% if carts %}
+    <table class="table ">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col" class="text-center">Gambar</th>
+          <th scope="col" class="text-center">Menu</th>
+          <th scope="col" class="text-center">Jumlah Pesanan</th>
+          <th scope="col" class="text-center">Harga/Pesanan</th>
+          <th scope="col" class="text-center">Total Harga</th>
+          <th scope="col" class="text-center">Action</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in carts %}
+        {% with x=item.menu.price y=item.jumlah_pesanan %}
+
+        <tr>
+          <td class="text-center align-middle"><img src="{{ item.menu.image.url }}" alt="{{ item.menu.name }}"
+              style="width: 35px; height: 35px;"></td>
+          <td class="text-center align-middle">{{ item.menu.name }}</td>
+          <td class="text-center align-middle">{{ item.jumlah_pesanan }}</td>
+          <td class="text-center align-middle">{{ item.menu.price }} IDR</td>
+          <td class="text-center align-middle">{% widthratio item.jumlah_pesanan 1 item.menu.price %} IDR</td>
+          <td class="text-center align-middle"><a href="{% url 'kantin:hapusMenuCart' menu_id=item.menu.id %}" class="btn btn-danger shadow-none"><i class="fa-solid fa-trash shadow-none"></i></a>
+          </td>
+        </tr>
+        {% endwith %}
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4" class="text-center">Total:</td>
+          <td class="text-center">{{ overall_total }} IDR</td>
+          <td class="text-center row">
+            <a href="" class="btn btn-success col-12">Pesan</a>
+          </td>
+        </tr>
+
+      </tfoot>
+    </table>
+    {% else %}
+    <p>Keranjang belanja Anda kosong.</p>
+    {% endif %}
+  </div>
 </div>
 
 {% endblock content %}

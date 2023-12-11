@@ -142,10 +142,23 @@ def add_to_cart(request, menu_id, kantin_id):
     # Redirect ke halaman sebelumnya
     return HttpResponseRedirect(reverse('kantin:listmenu', kwargs={'kantin_id': kantin_id}))
 
+@login_required
 def cart(request, kantin_id, pembeli_id):
     carts = Keranjang.objects.filter(penjual = kantin_id, pembeli = pembeli_id)
+    
+    total_harga_per_baris = [item.jumlah_pesanan * item.menu.price for item in carts]
+    
+    total_harga_semua_keranjang = sum(total_harga_per_baris)
 
-    return render(request, "cart.html", {'cart_items': carts })
+    return render(request, "cart.html", {'carts': carts, 'overall_total': total_harga_semua_keranjang })
+
+def hapusMenuCart(request, menu_id):
+    Keranjang.objects.filter(menu_id=menu_id).delete()
+    pembeli = request.user.id
+    carts = Keranjang.objects.filter(penjual = menu_id, pembeli = pembeli)
+    
+    return redirect('kantin:cart', kantin_id=menu_id, pembeli_id= pembeli)
+    
     
 
 
