@@ -7,10 +7,9 @@ from datetime import datetime
 from kantin.models import Menu
 from user.models import User
 from pesanan.models import Keranjang
-from django.contrib.sessions.models import Session
 from django.urls import reverse
-from django.http import JsonResponse
-from django.template.loader import render_to_string
+from django.utils import timezone
+
 
 date_now = datetime.now()
 
@@ -155,9 +154,10 @@ def cart(request, kantin_id, pembeli_id):
 def hapusMenuCart(request, menu_id):
     Keranjang.objects.filter(menu_id=menu_id).delete()
     pembeli = request.user.id
-    carts = Keranjang.objects.filter(penjual = menu_id, pembeli = pembeli)
+    carts = Keranjang.objects.filter( pembeli = pembeli)
+    timestamp = int(timezone.now().timestamp())
     
-    return redirect('kantin:cart', kantin_id=menu_id, pembeli_id= pembeli)
+    return render(request, 'cart.html', {'timestamp':timestamp ,'carts': carts, 'kantin_id':menu_id, 'pembeli_id':pembeli})
     
     
 

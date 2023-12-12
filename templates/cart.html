@@ -14,7 +14,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="">Menu</a>
+          <a class="nav-link active" aria-current="page" href="">List Kantin</a>
         </li>
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="">Pesanan</a>
@@ -61,7 +61,7 @@
           <td class="text-center align-middle">{{ item.jumlah_pesanan }}</td>
           <td class="text-center align-middle">{{ item.menu.price }} IDR</td>
           <td class="text-center align-middle">{% widthratio item.jumlah_pesanan 1 item.menu.price %} IDR</td>
-          <td class="text-center align-middle"><a href="{% url 'kantin:hapusMenuCart' menu_id=item.menu.id %}" class="btn btn-danger shadow-none"><i class="fa-solid fa-trash shadow-none"></i></a>
+          <td class="text-center align-middle"><a href="{% url 'kantin:hapusMenuCart' menu_id=item.menu.id %}?nonce={{ timestamp }}" class="btn btn-danger shadow-none"><i class="fa-solid fa-trash shadow-none"></i></a>
           </td>
         </tr>
         {% endwith %}
@@ -72,14 +72,14 @@
           <td colspan="4" class="text-center">Total:</td>
           <td class="text-center">{{ overall_total }} IDR</td>
           <td class="text-center row">
-            <a href="" class="btn btn-success col-12">Pesan</a>
+            <a href="{% url 'pesanan:pesan' %}" class="btn btn-success col-12">Pesan</a>
           </td>
         </tr>
 
       </tfoot>
     </table>
     {% else %}
-    <p>Keranjang belanja Anda kosong.</p>
+    <p class="text-center">Keranjang belanja Anda kosong.</p>
     {% endif %}
   </div>
 </div>

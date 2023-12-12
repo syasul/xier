@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock head %}
+{% block content %}
+<nav class="navbar shadow navbar-expand-lg navbar-light bg-light shadow-none">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">Xier</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="">List Kantin</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="">Pesanan</a>
+        </li>
+      </ul>
+      {% if user.is_authenticated %}
+      <a class="btn btn-danger" href="{% url 'logout' %}" role="button"><i
+          class="fa-solid fa-right-from-bracket"></i></a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+<div class="p-5">
+  
+{% endblock content %}
