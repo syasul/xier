@@ -4,7 +4,7 @@
 
 {% endblock head %}
 {% block content %}
-<nav class="navbar shadow navbar-expand-lg navbar-light bg-light shadow-none">
+<nav class="navbar shadow navbar-expand-lg navbar-light bg-light shadow-none sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="#">Xier</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -61,7 +61,7 @@
           <td class="text-center align-middle">{{ item.jumlah_pesanan }}</td>
           <td class="text-center align-middle">{{ item.menu.price }} IDR</td>
           <td class="text-center align-middle">{% widthratio item.jumlah_pesanan 1 item.menu.price %} IDR</td>
-          <td class="text-center align-middle"><a href="{% url 'kantin:hapusMenuCart' menu_id=item.menu.id %}?nonce={{ timestamp }}" class="btn btn-danger shadow-none"><i class="fa-solid fa-trash shadow-none"></i></a>
+          <td class="text-center align-middle"><a href="{% url 'kantin:hapusMenuCart' menu_id=item.menu.id %}" class="btn btn-danger shadow-none"><i class="fa-solid fa-trash shadow-none link-light"></i></a>
           </td>
         </tr>
         {% endwith %}
@@ -72,7 +72,16 @@
           <td colspan="4" class="text-center">Total:</td>
           <td class="text-center">{{ overall_total }} IDR</td>
           <td class="text-center row">
-            <a href="{% url 'pesanan:pesan' %}" class="btn btn-success col-12">Pesan</a>
+            
+            {% for i in carts %}
+            
+              {% if forloop.last %}
+                <a href="{% url 'pesanan:pesanKeranjang' pesanan_id=i.id %}" class="btn btn-success col-10 mx-auto">Pesan</a>
+              {% endif %}
+              
+              
+            {% endfor %} 
+              
           </td>
         </tr>
 

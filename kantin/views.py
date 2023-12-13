@@ -6,9 +6,10 @@ from datetime import datetime
 # from logaktifitas.models import Logaktifitas
 from kantin.models import Menu
 from user.models import User
-from pesanan.models import Keranjang
+from pesanan.models import Keranjang, Pesanan
 from django.urls import reverse
 from django.utils import timezone
+from django.http import Http404
 
 
 date_now = datetime.now()
@@ -120,36 +121,47 @@ def list_menu(request, kantin_id):
     kantin = get_object_or_404(User, pk=kantin_id)
     menus = Menu.objects.filter(author = kantin)
     
-    keranjang = Keranjang.objects.filter(penjual=kantin, pembeli=request.user)
+    keranjang = Keranjang.objects.filter(penjual=kantin)
     
-    return render(request, "listMenu.html", {'menu_list' : menus, 'kantin_id': kantin_id, 'kantin': kantin, 'keranjang': keranjang})
+    return render(request, "listMenu.html", {'menu_list' : menus, 'kantin_id': kantin_id, 'kantin':kantin})
 
 @login_required
 def add_to_cart(request, menu_id, kantin_id):
     menu = get_object_or_404(Menu, pk=menu_id)
     pembeli = request.user
     penjual = menu.author
+    pesanan = None
     
-    
-    keranjang_item, created = Keranjang.objects.get_or_create(pembeli=pembeli, penjual=penjual, menu=menu)
+    try:
+        pesanan = Pesanan.objects.get(status_cart="Aktif")
+    except Pesanan.DoesNotExist:
+        pesanan = Pesanan.objects.create(pembeli=pembeli)
+        pesanan.save()
+        
+    keranjang_item, created = Keranjang.objects.get_or_create(penjual=penjual, menu=menu, pesanan=pesanan)
 
     if not created:
         keranjang_item.jumlah_pesanan += 1
         keranjang_item.save()
 
-
     # Redirect ke halaman sebelumnya
     return HttpResponseRedirect(reverse('kantin:listmenu', kwargs={'kantin_id': kantin_id}))
 
 @login_required
-def cart(request, kantin_id, pembeli_id):
-    carts = Keranjang.objects.filter(penjual = kantin_id, pembeli = pembeli_id)
-    
-    total_harga_per_baris = [item.jumlah_pesanan * item.menu.price for item in carts]
-    
-    total_harga_semua_keranjang = sum(total_harga_per_baris)
+def cart(request):
+    try:
+        user = request.user
+        pesanan = Pesanan.objects.get(status_cart="Aktif", pembeli=user)
+        carts = Keranjang.objects.filter(pesanan=pesanan.id)
+        
+        total_harga_per_baris = [item.jumlah_pesanan * item.menu.price for item in carts]
+        
+        total_harga_semua_keranjang = sum(total_harga_per_baris)
 
-    return render(request, "cart.html", {'carts': carts, 'overall_total': total_harga_semua_keranjang })
+        return render(request, "cart.html", {'carts': carts, 'overall_total': total_harga_semua_keranjang })
+    
+    except Pesanan.DoesNotExist:
+        raise Http404("cart.html")
 
 def hapusMenuCart(request, menu_id):
     Keranjang.objects.filter(menu_id=menu_id).delete()

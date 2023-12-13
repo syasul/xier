@@ -4,41 +4,40 @@
 
 {% endblock head %}
 {% block content %}
-<nav class="navbar shadow navbar-expand-lg navbar-light bg-light shadow-none">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Xier</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="">Manage Menu</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="">List Pesanan</a>
-          </li>
-        </ul>
-        {% if user.is_authenticated %}
-        <a class="btn btn-danger" href="{% url 'logout' %}" role="button"><i class="fa-solid fa-right-from-bracket"></i></a>
-        {% endif %}
-      </div>
+<nav class="navbar shadow navbar-expand-lg navbar-light bg-light shadow-none sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">Xier</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Manage Menu</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">List Pesanan</a>
+        </li>
+      </ul>
+      {% if user.is_authenticated %}
+      <a class="btn btn-danger shadow-none" href="{% url 'logout' %}" role="button"><i class="fa-solid fa-right-from-bracket"></i></a>
+      {% endif %}
     </div>
-  </nav>
+  </div>
+</nav>
+
   {% if messages %}
             {% for msg in messages %}
             <div class="alert alert-{{msg.tags}}" role="alert">{{msg}}</div>
             {% endfor %}
 {% endif %}
-<div class="d-grid gap-2">
+<div class="d-grid gap-2 mt-5 mx-auto" style="width: 95%;">
   <button type="button" class="btn btn-primary mt-3 mb-3" data-bs-toggle="modal" data-bs-target="#exampleModalMenuBaru">
   Tambah menu baru
 </button>
 </div>
-<div class="card shadow">
-  <div class="card-body">
 
-    <table class="table">
+    <table class="table mx-auto" style="width: 95%;">
   <thead class="table-dark">
     <tr>
       <th scope="col" class="text-center">Image</th>
@@ -52,21 +51,19 @@
   <tbody>
       {% for m in menu %}
     <tr>
-      <td  class="text-center"><img src="{{m.image.url}}" width="125rem" height="125rem"></td>
-      <td  class="text-center">{{m.name}}</td>
-      <td  class="text-center">{{m.desc}}</td>
-      <td  class="text-center">{{m.stok}}</td>
-      <td  class="text-center">RP. {{m.price}}</td>
-      <td  class="text-center">
-          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate-{{m.id}}">Update</button>
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete-{{m.id}}">Delete</button>
+      <td  class="text-center align-middle"><img src="{{m.image.url}}" width="125rem" height="125rem"></td>
+      <td  class="text-center align-middle">{{m.name}}</td>
+      <td  class="text-center align-middle">{{m.desc}}</td>
+      <td  class="text-center align-middle">{{m.stok}}</td>
+      <td  class="text-center align-middle">RP. {{m.price}}</td>
+      <td  class="text-center align-middle">
+          <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModalUpdate-{{m.id}}"><i class="fa-solid fa-pen shadow-none link-light"></i></button>
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModalDelete-{{m.id}}"><i class="fa-solid fa-trash shadow-none"></i></button>
       </td>
       {% endfor %}
     </tr>
   </tbody>
 </table>
-  </div>
-</div>
 
 
 

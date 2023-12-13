@@ -4,7 +4,7 @@
 
 {% endblock head %}
 {% block content %}
-<nav class="navbar shadow navbar-expand-lg navbar-light bg-light shadow-none">
+<nav class="navbar shadow navbar-expand-lg navbar-light bg-light shadow-none sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="#">Xier</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -33,21 +33,10 @@
       <div class="col-md-8 d-flex flex-row bd-highlight align-items-center">
         <div class="shape-rectangle bd-highlight"
           style="width: 13px; height:28px; background-color: #000; border-radius: 3px"></div>
-        <div class="text bd-highlight" style="font-size: 15px; font-weight:600; margin-left: 5px;">{{kantin}}</div>
+        <div class="text bd-highlight" style="font-size: 15px; font-weight:600; margin-left: 5px;">{{ kantin }}</div>
       </div>
       <div class="col-md-4 d-flex flex-row justify-content-end align-items-center p-0">
-        
-       
-        {% for i in keranjang %}
-          {% if forloop.last %}
-            <a href="{% url 'kantin:cart' kantin_id=i.penjual.id pembeli_id=i.pembeli.id %}" style="text-decoration: none; color: white;" class="btn bg-primary"><i class="fa-solid fa-cart-shopping"></i></a>
-          {% endif %}
-        {% endfor %}
-    
-
-
-          
-        
+        <a href="{% url 'kantin:cart'  %}" style="text-decoration: none; color: white;" class="btn bg-primary"><i class="fa-solid fa-cart-shopping"></i></a> 
     </div>
     </div>
     {% for i in menu_list %}
